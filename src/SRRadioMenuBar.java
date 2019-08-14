@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SRRadioMenuBar extends JMenuBar {
+    private JMenuItem update;
 
     /**
      * Constructs a SRRadioMenuBar with "About" and "How to" menuItems
@@ -10,6 +11,7 @@ public class SRRadioMenuBar extends JMenuBar {
         JMenu options = new JMenu("Alternativ");
         JMenuItem about = new JMenuItem("Om");
         JMenuItem howTo = new JMenuItem("Användning");
+        update = new JMenuItem("Uppdatera");
         about.addActionListener(e -> {
             JFrame aboutFrame = new JFrame("About");
             aboutFrame.setResizable(false);
@@ -49,4 +51,7 @@ public class SRRadioMenuBar extends JMenuBar {
         this.add(options);
         this.setVisible(true);
     }
+    
+    Public JMenuItem getUpdate(){return update;}
+    
 }
