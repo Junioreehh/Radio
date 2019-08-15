@@ -7,7 +7,7 @@ public class SRRadioMenuBar extends JMenuBar {
     /**
      * Constructs a SRRadioMenuBar with "About" and "How to" menuItems
      */
-    public SRRadioMenuBar(){
+    public SRRadioMenuBar() {
         JMenu options = new JMenu("Alternativ");
         JMenuItem about = new JMenuItem("Om");
         JMenuItem howTo = new JMenuItem("Användning");
@@ -28,6 +28,7 @@ public class SRRadioMenuBar extends JMenuBar {
             aboutFrame.add(text);
             aboutFrame.setVisible(true);
         });
+        
         howTo.addActionListener(e -> {
             JFrame howToFrame = new JFrame("How To");
             howToFrame.setLocationRelativeTo(null);
@@ -43,15 +44,15 @@ public class SRRadioMenuBar extends JMenuBar {
                     " på det i tabellen");
             text.setEditable(false);
             howToFrame.add(text);
-
             howToFrame.setVisible(true);
         });
+        
         options.add(about);
         options.add(howTo);
         this.add(options);
         this.setVisible(true);
     }
     
-    Public JMenuItem getUpdate(){return update;}
+    Public JMenuItem getUpdate() {return update;}
     
 }
