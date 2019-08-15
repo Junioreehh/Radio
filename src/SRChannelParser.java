@@ -2,7 +2,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,13 +11,12 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class SRChannelParser {
-
     private Document XMLDocument;
 
     /**
      * Constructs a SRChannelParser
      */
-    public SRChannelParser(){
+    public SRChannelParser() {
         updateDocument();
     }
 
@@ -27,7 +25,7 @@ public class SRChannelParser {
      * XMLDocument
      * @return An ArrayList with strings
      */
-    public ArrayList<String> getChannels(){
+    public ArrayList<String> getChannels() {
         ArrayList<String> channelNames = new ArrayList<>();
         if(XMLDocument == null){
             channelNames.add("Error occurred retrieving channels");
@@ -46,7 +44,7 @@ public class SRChannelParser {
      * @param channelName A string of the name of the channel
      * @return A string
      */
-    public String getChannelDesc(String channelName){
+    public String getChannelDesc(String channelName) {
         Node currentNode = getChannelsNode();
         NodeList channelNodeList = currentNode.getChildNodes();
         if(XMLDocument == null){
@@ -70,7 +68,6 @@ public class SRChannelParser {
                 }
             }
         }
-
         return "Couldn't retrieve description";
     }
 
@@ -79,7 +76,7 @@ public class SRChannelParser {
      * @param channelName The name of the channel
      * @return A String of the URL of the image
      */
-    public String getChannelImageURL(String channelName){
+    public String getChannelImageURL(String channelName) {
         Node currentNode = getChannelsNode();
         NodeList channelNodeList = currentNode.getChildNodes();
         if(XMLDocument == null){
@@ -107,7 +104,7 @@ public class SRChannelParser {
      * @param channelName The name of the channel
      * @return A String of the ID
      */
-    public String getChannelID(String channelName){
+    public String getChannelID(String channelName) {
         Node currentNode = getChannelsNode();
         NodeList channelNodeList = currentNode.getChildNodes();
 
@@ -128,27 +125,22 @@ public class SRChannelParser {
     /**
      * Updates the XMLDocument containing the channels
      */
-    public void updateDocument(){
+    public void updateDocument() throws ParserConfigurationException,
+                                 IOException, SAXException {
         DocumentBuilderFactory documentBuilderFactory
                 = DocumentBuilderFactory.newInstance();
 
         /*Recovers the XML and parses it from the Sveriges radio API*/
-        try {
             DocumentBuilder db = documentBuilderFactory.newDocumentBuilder();
             XMLDocument = db.parse(new URL("http://api.sr.se/api/v2/" +
                     "channels?pagination=false")
                     .openStream());
-        }catch(ParserConfigurationException e){
-            System.err.println("Unable to configure parser");
-            JFrame errorMessage = new JFrame();
-            errorMessage.add(new JTextArea("Någonting gick snett,prova igen"));
-
-        }catch(IOException e){
+                                     
+            //System.err.println("Unable to configure parser");
+            //JFrame errorMessage = new JFrame();
+            //errorMessage.add(new JTextArea("Någonting gick snett,prova igen"));
             System.err.println("Stream from SR closed unexpectedly");
-            System.exit(0);
-        }catch(SAXException e){
             System.err.println("Not correct format");
-            System.exit(0);
         }
     }
 
@@ -156,7 +148,7 @@ public class SRChannelParser {
      * locates the "channels" node and returns it
      * @return A Node
      */
-    private Node getChannelsNode(){
+    private Node getChannelsNode() {
         Node currentNode = null;
 
         /*Finds the "channels" node in the document*/
