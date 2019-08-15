@@ -2,8 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class SRRadioGui extends JFrame{
-
+public class SRRadioGui extends JFrame {
     private JPanel leftPanel;
     private RadioPanel rightPanel;
     private JScrollPane table;
@@ -13,7 +12,7 @@ public class SRRadioGui extends JFrame{
      * information surrounding them
      * @param channels An Arraylist with names of the channels as strings
      */
-    public SRRadioGui(ArrayList<String> channels){
+    public SRRadioGui(ArrayList<String> channels) {
         setSize(1000,800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -25,14 +24,13 @@ public class SRRadioGui extends JFrame{
         rightPanel = new RadioPanel(channels);
         add(rightPanel,BorderLayout.EAST);
         setVisible(true);
-
     }
 
     /**
      * Removes old Jtable and inserts new one
      * @param table JTable to be inserted
      */
-    public void addJtable(JTable table){
+    public void addJtable(JTable table) {
         if(table != null){
             if(leftPanel.getComponentCount() == 1){
                 leftPanel.remove(0);
@@ -49,7 +47,7 @@ public class SRRadioGui extends JFrame{
      * Returns the table currently showing
      * @return A Jtable
      */
-    public JTable getTable(){
+    public JTable getTable() {
         return (JTable)table.getViewport().getComponent(0);
     }
 
@@ -57,7 +55,7 @@ public class SRRadioGui extends JFrame{
      * Returns the Update button
      * @return A Jbutton
      */
-    public JButton getUpdateButton(){
+    public JButton getUpdateButton() {
         return rightPanel.getButton();
     }
 
@@ -65,7 +63,7 @@ public class SRRadioGui extends JFrame{
      * Returns the Channel ComboBox
      * @return A JComboBox
      */
-    public JComboBox<String> getComboBox(){
+    public JComboBox<String> getComboBox() {
         return rightPanel.getComboBox();
     }
 
@@ -73,7 +71,7 @@ public class SRRadioGui extends JFrame{
      * Sets the description in the description text area
      * @param description A string
      */
-    public void setDescription(String description){
+    public void setDescription(String description) {
         rightPanel.setDescription(description);
     }
 
@@ -81,7 +79,7 @@ public class SRRadioGui extends JFrame{
      * Returns the Jlabel showing the images
      * @return A Jlabel
      */
-    public JLabel getJlabel(){
+    public JLabel getJlabel() {
         return rightPanel.getJlabel();
     }
 
@@ -89,7 +87,7 @@ public class SRRadioGui extends JFrame{
      * Returns the name of the channel currently selected in the JComboBox
      * @return A String
      */
-    public String getSelectedChannel(){
+    public String getSelectedChannel() {
         return rightPanel.getChannel();
     }
 
