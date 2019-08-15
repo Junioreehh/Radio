@@ -10,36 +10,29 @@ public class SRController {
 
     private SRChannelParser channelParser;
     private SRBroadcastsParser broadcastsParser;
-    private SRRadioGui Gui;
+    private SRRadioGui gui;
 
     /**
      * Constructs a SRController
      */
-    public SRController(){
+    public SRController() {
         channelParser = new SRChannelParser();
         broadcastsParser = new SRBroadcastsParser();
-        Gui = new SRRadioGui(channelParser.getChannels());
-        Gui.getUpdateButton().addActionListener(e -> new Thread(){
-            public void run(){
-                updateTable(channelParser.getChannelID
-                            (Gui.getSelectedChannel()));
-            }
-        }.start());
-        Gui.getComboBox().addActionListener(e -> updateTable
-                    (channelParser.getChannelID(Gui.getSelectedChannel())));
+        gui = new SRRadioGui(channelParser.getChannels());
+        gui.getUpdateButton().addActionListener(e -> updateTable());
+        gui.getComboBox().addActionListener(e -> updateTable());
     }
 
     /**
      * Updates the table with the channelID broadcasts
      * @param channelID A string
      */
-    public void updateTable(String channelID){
-        broadcastsParser.getSchedule(channelID);
+    public void updateTable() {
         Object[][] data = getData();
         String[] columNames = {" ","Titel","Sändingstid","Längd"};
-        SwingUtilities.invokeLater(() -> Gui.addJtable
+        broadcastsParser.getSchedule(gui.getSelectedChannel);
+        SwingUtilities.invokeLater(() -> gui.addJtable
                                         (setUpJTable(data,columNames)));
-
     }
 
     /**
@@ -47,7 +40,7 @@ public class SRController {
      * @return A SRRadioGui
      */
     public SRRadioGui getGui() {
-        return Gui;
+        return gui;
     }
 
     /**
@@ -56,7 +49,7 @@ public class SRController {
      * @param columNames A string array
      * @return A Jtable
      */
-    private JTable setUpJTable(Object[][] data,String[] columNames){
+    private JTable setUpJTable(Object[][] data,String[] columNames) {
         JTable SRTable = new JTable(data,columNames){
             @Override
             public boolean isCellEditable(int row, int column){
@@ -69,16 +62,16 @@ public class SRController {
         SRTable.getColumnModel().getColumn(2).setPreferredWidth(130);
         SRTable.getColumnModel().getColumn(3).setPreferredWidth(60);
         SRTable.getSelectionModel().addListSelectionListener(e -> {
-            if(Gui.getTable().getSelectedRow() > -1){
-                Gui.setDescription(broadcastsParser.getTitles().get(SRTable
-                        .getSelectedRow())+"\n"+broadcastsParser
-                        .getNodesContent("description").get(SRTable
-                                .getSelectedRow()));
+            if(gui.getTable().getSelectedRow() > -1){
+                gui.setDescription(broadcastsParser.getTitles().get(SRTable
+                                   .getSelectedRow())+"\n"+broadcastsParser
+                                   .getNodesContent("description").get(SRTable
+                                   .getSelectedRow()));
                 try {
                     URL url = new URL(broadcastsParser.getImageURL
                                      (SRTable.getSelectedRow()));
                     ImageIcon icon = new ImageIcon(ImageIO.read(url));
-                    Gui.getJlabel().setIcon(icon);
+                    gui.getJlabel().setIcon(icon);
                 }catch(IOException ioe){
                     System.err.println("Exception caught when trying to change image, keeping the old one");
                 }
@@ -91,14 +84,14 @@ public class SRController {
      * Gets the data needed to set up the JTable
      * @return A Object matrix
      */
-    private Object[][] getData(){
+    private Object[][] getData() {
+        Object[][] data;
         ArrayList<String> startTimes = broadcastsParser.getNodesContent
                 ("starttimeutc");
         ArrayList<String> titles = broadcastsParser.getTitles();
         ArrayList<String> endTimes = broadcastsParser.getNodesContent
                 ("endtimeutc");
         Instant time = Instant.now();
-        Object[][] data;
         data = new Object[broadcastsParser.getEpisodeSize()][4];
         for(int i = 0; i < broadcastsParser.getEpisodeSize(); i++) {
             if(time.plus(Duration.ofHours(1)).isAfter(Instant.parse
@@ -120,7 +113,7 @@ public class SRController {
      * @param time a string in the format of Instant.Parse()
      * @return formatted string
      */
-    private String formatTime(String time){
+    private String formatTime(String time) {
         String newTime = Instant.parse(time).plus(Duration.ofHours(1)).toString();
         return newTime.substring(0,10)+" "+newTime.substring(11,19);
     }
