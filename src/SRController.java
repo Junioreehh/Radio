@@ -7,7 +7,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 public class SRController {
-
     private SRChannelParser channelParser;
     private SRBroadcastsParser broadcastsParser;
     private SRRadioGui gui;
@@ -39,9 +38,7 @@ public class SRController {
      * Returns the SRRadioGui
      * @return A SRRadioGui
      */
-    public SRRadioGui getGui() {
-        return gui;
-    }
+    public SRRadioGui getGui() {return gui}
 
     /**
      * Sets up the settings for the Jtable with the data provided
@@ -117,4 +114,5 @@ public class SRController {
         String newTime = Instant.parse(time).plus(Duration.ofHours(1)).toString();
         return newTime.substring(0,10)+" "+newTime.substring(11,19);
     }
+    
 }
