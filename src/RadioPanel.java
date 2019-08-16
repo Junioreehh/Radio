@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class RadioPanel extends JPanel {
-
     private JComboBox<String> channels;
     private JTextArea description;
     private JLabel image;
@@ -17,7 +16,7 @@ public class RadioPanel extends JPanel {
      * Constructs a Radiopanel
      * @param channels Channels to show in JComboBox
      */
-    public RadioPanel(ArrayList<String> channels){
+    public RadioPanel(ArrayList<String> channels) {
         String[] channelArr = {" "};
         channelArr = channels.toArray(channelArr);
         description = new JTextArea();
@@ -25,15 +24,12 @@ public class RadioPanel extends JPanel {
         description.setPreferredSize(new Dimension(512,200));
         description.setBackground(Color.LIGHT_GRAY);
         description.setLineWrap(true);
-        update = new JButton("Uppdatera");
-        update.setBackground(Color.GRAY);
-        update.setPreferredSize(new Dimension(100,40));
-//        add(update);
         this.channels = new JComboBox<>(channelArr);
         this.channels.setPreferredSize(new Dimension(220,40));
         this.channels.setBackground(Color.GRAY);
         add(this.channels);
         add(description);
+        
         try{
             BufferedImage SRImage = ImageIO.read(new URL("https://static-cdn" +
                     ".sr.se/sida/images/3113/2216702_512_512.jpg?preset=" +
@@ -43,18 +39,11 @@ public class RadioPanel extends JPanel {
             image = new JLabel();
             image.setBackground(Color.BLACK);
         }
+        
         add(image);
         setPreferredSize(new Dimension(512,800));
         this.channels.setVisible(true);
         setVisible(true);
-    }
-
-    /**
-     * Returns UpdateButton
-     * @return A Jbutton
-     */
-    public JButton getButton() {
-        return update;
     }
 
     /**
