@@ -10,7 +10,7 @@ public class Main {
             @Override
             public void run() {
                 System.out.println(SRController.getGui().getSelectedChannel());
-                SRController.updateTable(SRController.getGui().getSelectedChannel());
+                SRController.updateTable();
 
             }
         };

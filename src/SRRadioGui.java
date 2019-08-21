@@ -52,14 +52,6 @@ public class SRRadioGui extends JFrame {
     }
 
     /**
-     * Returns the Update button
-     * @return A Jbutton
-     */
-    public JButton getUpdateButton() {
-        return rightPanel.getButton();
-    }
-
-    /**
      * Returns the Channel ComboBox
      * @return A JComboBox
      */
@@ -89,6 +81,15 @@ public class SRRadioGui extends JFrame {
      */
     public String getSelectedChannel() {
         return rightPanel.getChannel();
+    }
+
+    public JMenuItem getUpdate() {
+        return getJMenuBar().getMenu(0).getItem(0);
+    }
+
+    public void errorMessage() {
+
+
     }
 
 }

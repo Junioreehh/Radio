@@ -10,7 +10,6 @@ public class RadioPanel extends JPanel {
     private JComboBox<String> channels;
     private JTextArea description;
     private JLabel image;
-    private JButton update;
 
     /**
      * Constructs a Radiopanel
@@ -18,6 +17,7 @@ public class RadioPanel extends JPanel {
      */
     public RadioPanel(ArrayList<String> channels) {
         String[] channelArr = {" "};
+
         channelArr = channels.toArray(channelArr);
         description = new JTextArea();
         description.setEditable(false);
@@ -30,12 +30,12 @@ public class RadioPanel extends JPanel {
         add(this.channels);
         add(description);
         
-        try{
+        try {
             BufferedImage SRImage = ImageIO.read(new URL("https://static-cdn" +
                     ".sr.se/sida/images/3113/2216702_512_512.jpg?preset=" +
                     "socialmedia-share-image"));
             image = new JLabel(new ImageIcon(SRImage));
-        }catch(IOException e){
+        }catch (IOException e){
             image = new JLabel();
             image.setBackground(Color.BLACK);
         }

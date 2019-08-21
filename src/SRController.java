@@ -15,21 +15,27 @@ public class SRController {
      * Constructs a SRController
      */
     public SRController() {
-        channelParser = new SRChannelParser();
         broadcastsParser = new SRBroadcastsParser();
+
+        try {
+            channelParser = new SRChannelParser();
+        }catch (IOException e) {
+            gui.errorMessage();
+        }
+
         gui = new SRRadioGui(channelParser.getChannels());
-        gui.getUpdateButton().addActionListener(e -> updateTable());
+
+        gui.getJMenuBar().getMenu(0).addActionListener(e -> updateTable());
         gui.getComboBox().addActionListener(e -> updateTable());
     }
 
     /**
      * Updates the table with the channelID broadcasts
-     * @param channelID A string
      */
     public void updateTable() {
         Object[][] data = getData();
         String[] columNames = {" ","Titel","Sändingstid","Längd"};
-        broadcastsParser.getSchedule(gui.getSelectedChannel);
+        broadcastsParser.getSchedule(gui.getSelectedChannel());
         SwingUtilities.invokeLater(() -> gui.addJtable
                                         (setUpJTable(data,columNames)));
     }
@@ -38,7 +44,9 @@ public class SRController {
      * Returns the SRRadioGui
      * @return A SRRadioGui
      */
-    public SRRadioGui getGui() {return gui}
+    public SRRadioGui getGui() {
+        return gui;
+    }
 
     /**
      * Sets up the settings for the Jtable with the data provided
@@ -114,5 +122,4 @@ public class SRController {
         String newTime = Instant.parse(time).plus(Duration.ofHours(1)).toString();
         return newTime.substring(0,10)+" "+newTime.substring(11,19);
     }
-    
 }

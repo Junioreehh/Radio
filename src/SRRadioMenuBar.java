@@ -5,13 +5,15 @@ public class SRRadioMenuBar extends JMenuBar {
     private JMenuItem update;
 
     /**
-     * Constructs a SRRadioMenuBar with "About" and "How to" menuItems
+     * Constructs a SRRadioMenuBar with
+     * "About", "Update" and "How to" menuItems
      */
     public SRRadioMenuBar() {
+        update = new JMenuItem("Uppdatera");
         JMenu options = new JMenu("Alternativ");
         JMenuItem about = new JMenuItem("Om");
         JMenuItem howTo = new JMenuItem("Användning");
-        update = new JMenuItem("Uppdatera");
+
         about.addActionListener(e -> {
             JFrame aboutFrame = new JFrame("About");
             aboutFrame.setResizable(false);
@@ -39,9 +41,9 @@ public class SRRadioMenuBar extends JMenuBar {
                     DISPOSE_ON_CLOSE);
             JTextArea text = new JTextArea("Välj kanal från menyn på " +
                     "högersidan\nProgrammet uppdaterar tabellen automatiskt" +
-                    " en gång i timmen\nFör att uppdatera själv tryck på" +
-                    " knappen\nFör att se info om ett program så klicka" +
-                    " på det i tabellen");
+                    " en gång i timmen\nFör att uppdatera själv gå till" +
+                    " \"Alternativ och klicka på \"Uppdatera\"\nFör att se " +
+                    "info om ett program så klicka på det i tabellen");
             text.setEditable(false);
             howToFrame.add(text);
             howToFrame.setVisible(true);
@@ -49,10 +51,13 @@ public class SRRadioMenuBar extends JMenuBar {
         
         options.add(about);
         options.add(howTo);
+        options.add(update);
         this.add(options);
         this.setVisible(true);
     }
     
-    Public JMenuItem getUpdate() {return update;}
+    public JMenuItem getUpdate() {
+        return update;
+    }
     
 }

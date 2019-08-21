@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SRBroadcastsParser {
-
     private ArrayList<Node> episodes;
 
     /**
@@ -48,6 +47,7 @@ public class SRBroadcastsParser {
         ArrayList<String> titles = new ArrayList<>();
         Iterator<Node> i = episodes.iterator();
         String title;
+
         while(i.hasNext()){
             Node currentNode = i.next();
             title = "";

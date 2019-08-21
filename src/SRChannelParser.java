@@ -16,7 +16,7 @@ public class SRChannelParser {
     /**
      * Constructs a SRChannelParser
      */
-    public SRChannelParser() {
+    public SRChannelParser() throws  IOException {
         updateDocument();
     }
 
@@ -125,22 +125,23 @@ public class SRChannelParser {
     /**
      * Updates the XMLDocument containing the channels
      */
-    public void updateDocument() throws ParserConfigurationException,
-                                 IOException, SAXException {
+    public void updateDocument() throws IOException{
         DocumentBuilderFactory documentBuilderFactory
                 = DocumentBuilderFactory.newInstance();
 
-        /*Recovers the XML and parses it from the Sveriges radio API*/
+        try {
             DocumentBuilder db = documentBuilderFactory.newDocumentBuilder();
             XMLDocument = db.parse(new URL("http://api.sr.se/api/v2/" +
                     "channels?pagination=false")
                     .openStream());
-                                     
-            //System.err.println("Unable to configure parser");
-            //JFrame errorMessage = new JFrame();
-            //errorMessage.add(new JTextArea("Någonting gick snett,prova igen"));
-            System.err.println("Stream from SR closed unexpectedly");
+        }catch (ParserConfigurationException e){
+            System.err.println("Unable to configure parser");
+            JFrame errorMessage = new JFrame();
+            errorMessage.add(new JTextArea("Någonting gick snett,prova igen"));
+        }catch (SAXException e){
             System.err.println("Not correct format");
+            System.exit(0);
+
         }
     }
 
