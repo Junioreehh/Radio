@@ -129,8 +129,7 @@ public class SRBroadcastsParser {
         /*Recovers the XML and parses it from the Sveriges radio API*/
         try {
             DocumentBuilder db = documentBuilderFactory.newDocumentBuilder();
-            doc = db.parse(new URL(URL)
-                    .openStream());
+            doc = db.parse(new URL(URL).openStream());
         }catch(ParserConfigurationException e){
             System.err.println("Unable to configure parser");
             System.exit(0);

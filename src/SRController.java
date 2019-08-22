@@ -33,11 +33,16 @@ public class SRController {
      * Updates the table with the channelID broadcasts
      */
     public void updateTable() {
-        Object[][] data = getData();
-        String[] columNames = {" ","Titel","Sändingstid","Längd"};
-        broadcastsParser.getSchedule(gui.getSelectedChannel());
-        SwingUtilities.invokeLater(() -> gui.addJtable
-                                        (setUpJTable(data,columNames)));
+        System.out.println(gui.getSelectedChannel());
+        broadcastsParser.getSchedule(channelParser.getChannelID
+                (gui.getSelectedChannel()));
+        SwingUtilities.invokeLater(() -> {
+            Object[][] data = getData();
+            String[] columnNames = {" ","Titel","Sändingstid","Längd"};
+            gui.addJtable(setUpJTable(data,columnNames));
+
+        });
+
     }
 
     /**
