@@ -84,7 +84,7 @@ public class SRRadioGui extends JFrame {
     }
 
     public JMenuItem getUpdate() {
-        return getJMenuBar().getMenu(0).getItem(0);
+        return getJMenuBar().getMenu(0).getItem(2);
     }
 
     public void errorMessage() {

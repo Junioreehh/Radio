@@ -20,13 +20,13 @@ public class SRController {
         try {
             channelParser = new SRChannelParser();
         }catch (IOException e) {
+            gui = new SRRadioGui(new ArrayList<>());
             gui.errorMessage();
         }
 
         gui = new SRRadioGui(channelParser.getChannels());
-
-        gui.getJMenuBar().getMenu(0).addActionListener(e -> updateTable());
         gui.getComboBox().addActionListener(e -> updateTable());
+        gui.getUpdate().addActionListener(e -> updateTable());
     }
 
     /**
