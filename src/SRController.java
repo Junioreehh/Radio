@@ -23,8 +23,9 @@ public class SRController {
             gui = new SRRadioGui(new ArrayList<>());
             gui.errorMessage();
         }
-
-        gui = new SRRadioGui(channelParser.getChannels());
+        SwingUtilities.invokeLater(() -> {
+            gui = new SRRadioGui(channelParser.getChannels());
+        });
         gui.getComboBox().addActionListener(e -> updateTable());
         gui.getUpdate().addActionListener(e -> updateTable());
     }
