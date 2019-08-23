@@ -56,6 +56,10 @@ public class SRRadioMenuBar extends JMenuBar {
         this.setVisible(true);
     }
     
+     /**
+     * Returns the "Uppdatera" JMenuItem
+     * @return A JMenuItem
+     */
     public JMenuItem getUpdate() {
         return update;
     }
