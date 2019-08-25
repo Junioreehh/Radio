@@ -6,14 +6,15 @@ public class Main {
     public static void main(String [] args) {
         SRController SRController = new SRController();
         Timer timer = new Timer();
+
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                System.out.println(SRController.getGui().getSelectedChannel());
                 SRController.updateTable();
-
+                System.out.println(SRController.getGui().getSelectedChannel());
             }
         };
-        timer.scheduleAtFixedRate(task,60*60*1000,60*60*1000);
+
+        timer.scheduleAtFixedRate(task,2*1000,2*1000);
     }
 }

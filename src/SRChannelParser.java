@@ -140,10 +140,10 @@ public class SRChannelParser {
                     .openStream());
         }catch (ParserConfigurationException e) {
             System.err.println("Unable to configure parser");
-            System.exit(0);
+            System.exit(1);
         }catch (SAXException e) {
             System.err.println("Not correct format");
-            System.exit(0);
+            System.exit(1);
         }
     }
 

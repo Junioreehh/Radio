@@ -18,7 +18,7 @@ public class SRBroadcastsParser {
     /**
      * Constructs a SRBroadcastsParser
      */
-    public SRBroadcastsParser(){
+    public SRBroadcastsParser() {
         episodes = new ArrayList<>();
     }
 
@@ -26,7 +26,7 @@ public class SRBroadcastsParser {
      * Saves the episodes of the channel with the id
      * @param id A string of the channel id
      */
-    public void getSchedule(String id){
+    public void getSchedule(String id) throws IOException {
         episodes.clear();
         String URL = "http://api.sr.se/api/v2/scheduledepisodes?channelid="+
                       id+"&pagination=false"+"&date=";
@@ -121,7 +121,7 @@ public class SRBroadcastsParser {
      * @param URL A string of the URL
      * @return A Document
      */
-    private Document getDocument(String URL){
+    private Document getDocument(String URL) throws IOException {
         Document doc = null;
         DocumentBuilderFactory documentBuilderFactory
                 = DocumentBuilderFactory.newInstance();
@@ -132,13 +132,10 @@ public class SRBroadcastsParser {
             doc = db.parse(new URL(URL).openStream());
         }catch(ParserConfigurationException e){
             System.err.println("Unable to configure parser");
-            System.exit(0);
-        }catch(IOException e){
-            System.err.println("Stream from SR closed unexpectedly");
-            System.exit(0);
+            System.exit(1);
         }catch(SAXException e){
             System.err.println("Not correct format");
-            System.exit(0);
+            System.exit(1);
         }
         return doc;
     }

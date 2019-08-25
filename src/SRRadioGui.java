@@ -88,7 +88,17 @@ public class SRRadioGui extends JFrame {
     }
 
     public void errorMessage() {
-
+        JFrame errorFrame = new JFrame("Error");
+        errorFrame.setLocationRelativeTo(null);
+        errorFrame.setLayout(new BorderLayout());
+        errorFrame.setResizable(false);
+        errorFrame.setSize(300,60);
+        errorFrame.setDefaultCloseOperation(WindowConstants.
+                DISPOSE_ON_CLOSE);
+        JTextArea text = new JTextArea("Kunde inte nå api.sr.se, prova kör om programmet");
+        text.setEditable(false);
+        errorFrame.add(text);
+        errorFrame.setVisible(true);
 
     }
 

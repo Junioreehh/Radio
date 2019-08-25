@@ -16,32 +16,42 @@ public class SRController {
      */
     public SRController() {
         broadcastsParser = new SRBroadcastsParser();
+        boolean exceptionCaught = false;
 
         try {
             channelParser = new SRChannelParser();
         }catch (IOException e) {
+            exceptionCaught = true;
             gui = new SRRadioGui(new ArrayList<>());
             gui.errorMessage();
         }
-        SwingUtilities.invokeLater(() -> {
-            gui = new SRRadioGui(channelParser.getChannels());
-        });
-        gui.getComboBox().addActionListener(e -> updateTable());
-        gui.getUpdate().addActionListener(e -> updateTable());
+
+        if (!exceptionCaught) {
+            SwingUtilities.invokeLater(() -> {
+                gui = new SRRadioGui(channelParser.getChannels());
+                gui.getComboBox().addActionListener(e -> updateTable());
+                gui.getUpdate().addActionListener(e -> updateTable());
+            });
+        }
+
     }
 
     /**
      * Updates the table with the channelID broadcasts
      */
     public void updateTable() {
-        System.out.println(gui.getSelectedChannel());
-        broadcastsParser.getSchedule(channelParser.getChannelID
-                (gui.getSelectedChannel()));
+
+        try {
+            broadcastsParser.getSchedule(channelParser.getChannelID
+                    (gui.getSelectedChannel()));
+        }catch (IOException e) {
+            gui.errorMessage();
+        }
+
         SwingUtilities.invokeLater(() -> {
             Object[][] data = getData();
             String[] columnNames = {" ","Titel","Sändingstid","Längd"};
             gui.addJtable(setUpJTable(data,columnNames));
-
         });
 
     }
@@ -67,13 +77,14 @@ public class SRController {
                 return false;
             }
         };
+
         SRTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         SRTable.getColumnModel().getColumn(0).setPreferredWidth(100);
         SRTable.getColumnModel().getColumn(1).setPreferredWidth(200);
         SRTable.getColumnModel().getColumn(2).setPreferredWidth(130);
         SRTable.getColumnModel().getColumn(3).setPreferredWidth(60);
         SRTable.getSelectionModel().addListSelectionListener(e -> {
-            if(gui.getTable().getSelectedRow() > -1){
+            if(gui.getTable().getSelectedRow() > -1 && gui.getTable().getSelectedRow() < gui.getTable().getRowCount()){
                 gui.setDescription(broadcastsParser.getTitles().get(SRTable
                                    .getSelectedRow())+"\n"+broadcastsParser
                                    .getNodesContent("description").get(SRTable
@@ -84,7 +95,8 @@ public class SRController {
                     ImageIcon icon = new ImageIcon(ImageIO.read(url));
                     gui.getJlabel().setIcon(icon);
                 }catch(IOException ioe){
-                    System.err.println("Exception caught when trying to change image, keeping the old one");
+                    System.err.println("Exception caught when trying to" +
+                            " change image, keeping the old one");
                 }
             }
         });
