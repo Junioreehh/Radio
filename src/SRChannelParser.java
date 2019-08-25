@@ -140,8 +140,7 @@ public class SRChannelParser {
                     .openStream());
         }catch (ParserConfigurationException e) {
             System.err.println("Unable to configure parser");
-            JFrame errorMessage = new JFrame();
-            errorMessage.add(new JTextArea("Någonting gick snett,prova igen"));
+            System.exit(0);
         }catch (SAXException e) {
             System.err.println("Not correct format");
             System.exit(0);
