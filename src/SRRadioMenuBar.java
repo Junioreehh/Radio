@@ -14,6 +14,7 @@ public class SRRadioMenuBar extends JMenuBar {
         JMenuItem about = new JMenuItem("Om");
         JMenuItem howTo = new JMenuItem("Användning");
 
+
         about.addActionListener(e -> {
             JFrame aboutFrame = new JFrame("About");
             aboutFrame.setResizable(false);

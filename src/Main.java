@@ -11,10 +11,8 @@ public class Main {
             @Override
             public void run() {
                 SRController.updateTable();
-                System.out.println(SRController.getGui().getSelectedChannel());
             }
         };
-
-        timer.scheduleAtFixedRate(task,2*1000,2*1000);
+        timer.scheduleAtFixedRate(task,3*1000,3*1000);
     }
 }

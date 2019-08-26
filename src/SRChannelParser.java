@@ -2,7 +2,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -136,12 +135,11 @@ public class SRChannelParser {
         try {
             DocumentBuilder db = documentBuilderFactory.newDocumentBuilder();
             xmlDocument = db.parse(new URL("http://api.sr.se/api/v2/" +
-                    "channels?pagination=false")
-                    .openStream());
-        }catch (ParserConfigurationException e) {
+                    "channels?pagination=false").openStream());
+        } catch (ParserConfigurationException e) {
             System.err.println("Unable to configure parser");
             System.exit(1);
-        }catch (SAXException e) {
+        } catch (SAXException e) {
             System.err.println("Not correct format");
             System.exit(1);
         }

@@ -20,37 +20,40 @@ public class SRController {
 
         try {
             channelParser = new SRChannelParser();
-        }catch (IOException e) {
+        } catch (IOException e) {
             exceptionCaught = true;
             gui = new SRRadioGui(new ArrayList<>());
             gui.errorMessage();
         }
 
+        /*
+         * If exception is caught then the program will create an empty
+         * Gui and only show an errormessage
+         */
         if (!exceptionCaught) {
-            SwingUtilities.invokeLater(() -> {
                 gui = new SRRadioGui(channelParser.getChannels());
                 gui.getComboBox().addActionListener(e -> updateTable());
                 gui.getUpdate().addActionListener(e -> updateTable());
-            });
         }
 
     }
 
     /**
-     * Updates the table with the channelID broadcasts
+     * Updates the table with the broadcasts of the currently selected channel
      */
-    public void updateTable() {
+    public synchronized void updateTable() {
+        String[] columnNames = {" ","Titel","Sändingstid","Längd"};
 
         try {
             broadcastsParser.getSchedule(channelParser.getChannelID
                     (gui.getSelectedChannel()));
-        }catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             gui.errorMessage();
         }
 
+        Object[][] data = getData();
+
         SwingUtilities.invokeLater(() -> {
-            Object[][] data = getData();
-            String[] columnNames = {" ","Titel","Sändingstid","Längd"};
             gui.addJtable(setUpJTable(data,columnNames));
         });
 
@@ -71,9 +74,9 @@ public class SRController {
      * @return A Jtable
      */
     private JTable setUpJTable(Object[][] data,String[] columNames) {
-        JTable SRTable = new JTable(data,columNames){
+        JTable SRTable = new JTable(data,columNames) {
             @Override
-            public boolean isCellEditable(int row, int column){
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
@@ -84,20 +87,27 @@ public class SRController {
         SRTable.getColumnModel().getColumn(2).setPreferredWidth(130);
         SRTable.getColumnModel().getColumn(3).setPreferredWidth(60);
         SRTable.getSelectionModel().addListSelectionListener(e -> {
-            if(gui.getTable().getSelectedRow() > -1 && gui.getTable().getSelectedRow() < gui.getTable().getRowCount()){
-                gui.setDescription(broadcastsParser.getTitles().get(SRTable
-                                   .getSelectedRow())+"\n"+broadcastsParser
-                                   .getNodesContent("description").get(SRTable
-                                   .getSelectedRow()));
-                try {
-                    URL url = new URL(broadcastsParser.getImageURL
-                                     (SRTable.getSelectedRow()));
-                    ImageIcon icon = new ImageIcon(ImageIO.read(url));
-                    gui.getJlabel().setIcon(icon);
-                }catch(IOException ioe){
-                    System.err.println("Exception caught when trying to" +
-                            " change image, keeping the old one");
-                }
+            if (gui.getTable().getSelectedRow() > -1) {
+                SwingUtilities.invokeLater(() -> {
+                    if (broadcastsParser.getEpisodeSize() >
+                                SRTable.getSelectedRow()) {
+                        gui.setDescription(broadcastsParser.getTitles().get
+                                (SRTable.getSelectedRow()) + "\n" +
+                                broadcastsParser.getNodesContent("description")
+                                        .get(SRTable.getSelectedRow()));
+
+                        try {
+                            URL url = new URL(broadcastsParser.getImageURL
+                                    (SRTable.getSelectedRow()));
+                            ImageIcon icon = new ImageIcon(ImageIO.read(url));
+                            gui.getJlabel().setIcon(icon);
+                        } catch (IOException ioe) {
+                            System.err.println("Exception caught when trying" +
+                                    " to change image, keeping the old one");
+                        }
+
+                    }
+                });
             }
         });
         return SRTable;
@@ -116,11 +126,11 @@ public class SRController {
                 ("endtimeutc");
         Instant time = Instant.now();
         data = new Object[broadcastsParser.getEpisodeSize()][4];
-        for(int i = 0; i < broadcastsParser.getEpisodeSize(); i++) {
-            if(time.plus(Duration.ofHours(1)).isAfter(Instant.parse
-                    (startTimes.get(i)).plus(Duration.ofHours(1)))){
+        for (int i = 0; i < broadcastsParser.getEpisodeSize(); i++) {
+            if (time.plus(Duration.ofHours(1)).isAfter(Instant.parse
+                    (startTimes.get(i)).plus(Duration.ofHours(1)))) {
                 data[i][0] = "Har redan sänt";
-            }else{
+            } else {
                 data[i][0] = "Kommer sändas";
             }
             data[i][1] = titles.get(i);
@@ -128,16 +138,17 @@ public class SRController {
             data[i][3] = Duration.between(Instant.parse(startTimes.get(i)),
                     Instant.parse(endTimes.get(i))).toMinutes()+" Min";
         }
+
         return data;
     }
 
     /**
-     * Formats the string and returns it as UTC+1
+     * Formats the string
      * @param time a string in the format of Instant.Parse()
      * @return formatted string
      */
     private String formatTime(String time) {
-        String newTime = Instant.parse(time).plus(Duration.ofHours(1)).toString();
+        String newTime = Instant.parse(time).toString();
         return newTime.substring(0,10)+" "+newTime.substring(11,19);
     }
 }

@@ -35,7 +35,7 @@ public class RadioPanel extends JPanel {
                     ".sr.se/sida/images/3113/2216702_512_512.jpg?preset=" +
                     "socialmedia-share-image"));
             image = new JLabel(new ImageIcon(SRImage));
-        }catch (IOException e) {
+        } catch (IOException e) {
             image = new JLabel();
             image.setBackground(Color.BLACK);
         }
@@ -67,7 +67,11 @@ public class RadioPanel extends JPanel {
      * @return A String
      */
     public String getChannel() {
-        return channels.getSelectedItem().toString();
+        if (channels.getSelectedItem() != null) {
+            return channels.getSelectedItem().toString();
+        } else {
+            return " ";
+        }
     }
 
     /**
