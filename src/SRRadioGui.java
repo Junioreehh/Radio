@@ -83,10 +83,18 @@ public class SRRadioGui extends JFrame {
         return rightPanel.getChannel();
     }
 
+    /**
+     * Returns the update JMenuItem
+     * @return a JMenuItemS
+     */
     public JMenuItem getUpdate() {
         return getJMenuBar().getMenu(0).getItem(2);
     }
 
+
+    /**
+     * Displays an errormessage for the user with a JFrame
+     */
     public void errorMessage() {
         SwingUtilities.invokeLater(() -> {
             JFrame errorFrame = new JFrame("Error");

@@ -60,14 +60,6 @@ public class SRController {
     }
 
     /**
-     * Returns the SRRadioGui
-     * @return A SRRadioGui
-     */
-    public SRRadioGui getGui() {
-        return gui;
-    }
-
-    /**
      * Sets up the settings for the Jtable with the data provided
      * @param data A Object matrix
      * @param columNames A string array

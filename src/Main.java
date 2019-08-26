@@ -13,6 +13,6 @@ public class Main {
                 SRController.updateTable();
             }
         };
-        timer.scheduleAtFixedRate(task,3*1000,3*1000);
+        timer.scheduleAtFixedRate(task,60*60*1000,60*60*1000);
     }
 }
