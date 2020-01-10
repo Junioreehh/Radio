@@ -1,3 +1,8 @@
+/**
+ * Written by Jesper Riekkola 2020-01-10
+ * dv17jra Jesper.riekkola@hotmail.com
+ */
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

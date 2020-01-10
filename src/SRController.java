@@ -1,6 +1,12 @@
+/**
+ * Written by Jesper Riekkola 2020-01-10
+ * dv17jra Jesper.riekkola@hotmail.com
+ */
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
@@ -22,8 +28,10 @@ public class SRController {
             channelParser = new SRChannelParser();
         } catch (IOException e) {
             exceptionCaught = true;
-            gui = new SRRadioGui(new ArrayList<>());
-            gui.errorMessage();
+            SwingUtilities.invokeLater(() -> {
+                gui = new SRRadioGui(new ArrayList<>());
+                gui.errorMessage();
+            });
         }
 
         /*
@@ -31,9 +39,18 @@ public class SRController {
          * Gui and only show an errormessage
          */
         if (!exceptionCaught) {
-                gui = new SRRadioGui(channelParser.getChannels());
-                gui.getComboBox().addActionListener(e -> updateTable());
-                gui.getUpdate().addActionListener(e -> updateTable());
+            ArrayList<String> channels = channelParser.getChannels();
+            try{
+                SwingUtilities.invokeAndWait(() -> {
+                    gui = new SRRadioGui(channels);
+                });
+            } catch(InterruptedException | InvocationTargetException e){
+                System.err.println("Issue instantiating SRRadioGui");
+                System.exit(1);
+            }
+
+            gui.getComboBox().addActionListener(e -> updateTable());
+            gui.getUpdate().addActionListener(e -> updateTable());
         }
 
     }
@@ -48,7 +65,9 @@ public class SRController {
             broadcastsParser.getSchedule(channelParser.getChannelID
                     (gui.getSelectedChannel()));
         } catch (IOException | NullPointerException e) {
-            gui.errorMessage();
+            SwingUtilities.invokeLater(() -> {
+                gui.errorMessage();
+            });
         }
 
         Object[][] data = getData();
@@ -140,7 +159,8 @@ public class SRController {
      * @return formatted string
      */
     private String formatTime(String time) {
-        String newTime = Instant.parse(time).toString();
+        String newTime = Instant.parse(time).plus(Duration.ofHours(1))
+                .toString();
         return newTime.substring(0,10)+" "+newTime.substring(11,19);
     }
 }

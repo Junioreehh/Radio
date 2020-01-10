@@ -1,9 +1,15 @@
+/**
+ * Written by Jesper Riekkola 2020-01-10
+ * dv17jra Jesper.riekkola@hotmail.com
+ */
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Main {
 
     public static void main(String [] args) {
+
         SRController SRController = new SRController();
         Timer timer = new Timer();
 
