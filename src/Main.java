@@ -3,6 +3,7 @@
  * dv17jra Jesper.riekkola@hotmail.com
  */
 
+import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,7 +17,9 @@ public class Main {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                SRController.updateTable();
+                SwingUtilities.invokeLater(() -> {
+                    SRController.updateTable();
+                });
             }
         };
         timer.scheduleAtFixedRate(task,60*60*1000,60*60*1000);

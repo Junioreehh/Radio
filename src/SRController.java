@@ -49,6 +49,10 @@ public class SRController {
                 System.exit(1);
             }
 
+            SwingUtilities.invokeLater(() -> {
+                updateTable();
+            });
+
             gui.getComboBox().addActionListener(e -> updateTable());
             gui.getUpdate().addActionListener(e -> updateTable());
         }
@@ -57,25 +61,36 @@ public class SRController {
 
     /**
      * Updates the table with the broadcasts of the currently selected channel
+     * updateTable is always executed on EDT to be thread safe
      */
-    public synchronized void updateTable() {
-        String[] columnNames = {" ","Titel","Sändingstid","Längd"};
+    public void updateTable() {
 
-        try {
-            broadcastsParser.getSchedule(channelParser.getChannelID
-                    (gui.getSelectedChannel()));
-        } catch (IOException | NullPointerException e) {
-            SwingUtilities.invokeLater(() -> {
-                gui.errorMessage();
-            });
-        }
+        SwingWorker backgroundWork = new SwingWorker() {
+            @Override
+            protected Object doInBackground() {
+                String[] columnNames = {" ", "Titel", "Sändingstid", "Längd"};
 
-        Object[][] data = getData();
+                try {
+                    broadcastsParser.getSchedule(channelParser.getChannelID
+                            (gui.getSelectedChannel()));
+                } catch (IOException | NullPointerException e) {
+                    SwingUtilities.invokeLater(() -> {
+                        gui.errorMessage();
+                    });
+                }
 
-        SwingUtilities.invokeLater(() -> {
-            gui.addJtable(setUpJTable(data,columnNames));
-        });
+                Object[][] data = getData();
+                System.out.println(SwingUtilities.isEventDispatchThread());
+                JTable episodes = setUpJTable(data, columnNames);
 
+                SwingUtilities.invokeLater(() -> {
+                    gui.addJtable(episodes);
+                });
+
+                return null;
+            }
+        };
+        backgroundWork.execute();
     }
 
     /**
@@ -99,7 +114,6 @@ public class SRController {
         SRTable.getColumnModel().getColumn(3).setPreferredWidth(60);
         SRTable.getSelectionModel().addListSelectionListener(e -> {
             if (gui.getTable().getSelectedRow() > -1) {
-                SwingUtilities.invokeLater(() -> {
                     if (broadcastsParser.getEpisodeSize() >
                                 SRTable.getSelectedRow()) {
                         gui.setDescription(broadcastsParser.getTitles().get
@@ -118,7 +132,6 @@ public class SRController {
                         }
 
                     }
-                });
             }
         });
         return SRTable;
@@ -136,6 +149,7 @@ public class SRController {
         ArrayList<String> endTimes = broadcastsParser.getNodesContent
                 ("endtimeutc");
         Instant time = Instant.now();
+
         data = new Object[broadcastsParser.getEpisodeSize()][4];
         for (int i = 0; i < broadcastsParser.getEpisodeSize(); i++) {
             if (time.plus(Duration.ofHours(1)).isAfter(Instant.parse
