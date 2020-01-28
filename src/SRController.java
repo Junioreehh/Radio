@@ -139,7 +139,7 @@ public class SRController {
 
     /**
      * Gets the data needed to set up the JTable
-     * @return A Object matrix
+     * @return A Object matrix filled with strings
      */
     private Object[][] getData() {
         Object[][] data;
