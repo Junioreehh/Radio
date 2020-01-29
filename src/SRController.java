@@ -80,7 +80,6 @@ public class SRController {
                 }
 
                 Object[][] data = getData();
-                System.out.println(SwingUtilities.isEventDispatchThread());
                 JTable episodes = setUpJTable(data, columnNames);
 
                 SwingUtilities.invokeLater(() -> {

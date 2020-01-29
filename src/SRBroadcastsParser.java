@@ -32,7 +32,7 @@ public class SRBroadcastsParser {
      * Saves the episodes of the channel with the id
      * @param id A string of the channel id
      */
-    public synchronized void getSchedule(String id) throws IOException {
+    public void getSchedule(String id) throws IOException {
         episodes.clear();
         String URL = "http://api.sr.se/api/v2/scheduledepisodes?channelid="+
                       id+"&pagination=false"+"&date=";
@@ -49,7 +49,7 @@ public class SRBroadcastsParser {
      * Returns the titles as string
      * @return An ArrayList with strings
      */
-    public synchronized ArrayList<String> getTitles() {
+    public ArrayList<String> getTitles() {
         ArrayList<String> titles = new ArrayList<>();
         Iterator<Node> i = episodes.iterator();
         String title;
@@ -90,7 +90,7 @@ public class SRBroadcastsParser {
      * @param node A string of the content name requested eg. "starttimeutc"
      * @return An ArrayList with strings
      */
-    public synchronized ArrayList<String> getNodesContent(String node) {
+    public ArrayList<String> getNodesContent(String node) {
         ArrayList<String> nodeContents = new ArrayList<>();
         Iterator<Node> i = episodes.iterator();
 
@@ -112,7 +112,7 @@ public class SRBroadcastsParser {
      * @param index An int
      * @return A string of the URL
      */
-    public synchronized String getImageURL(int index) {
+    public String getImageURL(int index) {
         Node currentNode = episodes.get(index);
 
         for (int j = 0; j < currentNode.getChildNodes().getLength(); j++) {
