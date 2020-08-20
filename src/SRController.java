@@ -64,6 +64,7 @@ public class SRController {
      */
     public void updateTable() {
 
+        //borde inte kalla på gui.getSelectedChannel här utanför EDT, ge det som parameter till swingworker
         try {
             broadcastsParser.getSchedule(channelParser.getChannelID
                     (gui.getSelectedChannel()));
