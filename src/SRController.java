@@ -61,45 +61,39 @@ public class SRController {
 
     /**
      * Updates the table with the broadcasts of the currently selected channel
-     * updateTable is always executed on EDT to be thread safe
      */
     public void updateTable() {
 
-        SwingWorker backgroundWork = new SwingWorker() {
-            @Override
-            protected Object doInBackground() {
-                String[] columnNames = {" ", "Titel", "Sändingstid", "Längd"};
+        try {
+            broadcastsParser.getSchedule(channelParser.getChannelID
+                    (gui.getSelectedChannel()));
+        } catch (IOException | NullPointerException e) {
+            SwingUtilities.invokeLater(() -> {
+                gui.errorMessage();
+            });
+        }
 
-                try {
-                    broadcastsParser.getSchedule(channelParser.getChannelID
-                            (gui.getSelectedChannel()));
-                } catch (IOException | NullPointerException e) {
-                    SwingUtilities.invokeLater(() -> {
-                        gui.errorMessage();
-                    });
-                }
+        Object[][] data = getData();
+        JTable episodes = setUpJTable(data);
 
-                Object[][] data = getData();
-                JTable episodes = setUpJTable(data, columnNames);
+        SwingUtilities.invokeLater(() -> {
+            gui.addJtable(episodes);
+        });
 
-                SwingUtilities.invokeLater(() -> {
-                    gui.addJtable(episodes);
-                });
 
-                return null;
-            }
-        };
-        backgroundWork.execute();
     }
 
     /**
      * Sets up the settings for the Jtable with the data provided
-     * @param data A Object matrix
-     * @param columNames A string array
-     * @return A Jtable
+     * @param data First column is "X" or blank, second is name of broadcast
+     *             episode as a string, third is start time as a string, and
+     *             last is duration as a string
+     * @return A Jtable filled with content of broadcasts
      */
-    private JTable setUpJTable(Object[][] data,String[] columNames) {
-        JTable SRTable = new JTable(data,columNames) {
+    private JTable setUpJTable(Object[][] data) {
+        String[] columnNames = {" ", "Titel", "Sändingstid", "Längd"};
+
+        JTable SRTable = new JTable(data,columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -138,7 +132,8 @@ public class SRController {
 
     /**
      * Gets the data needed to set up the JTable
-     * @return A Object matrix filled with strings
+     * @return A Object matrix filled with strings, First is "X" or blank,
+     * second is name of episode, third is start time and last is duration
      */
     private Object[][] getData() {
         Object[][] data;
