@@ -1,5 +1,5 @@
 /**
- * Written by Jesper Riekkola 2020-01-11
+ * Written by Jesper Riekkola 2020-08-24
  * dv17jra Jesper.riekkola@hotmail.com
  */
 
@@ -11,6 +11,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class SRController {
     private SRChannelParser channelParser;
@@ -50,24 +51,49 @@ public class SRController {
             }
 
             SwingUtilities.invokeLater(() -> {
-                updateTable();
+                swingWork();
             });
 
-            gui.getComboBox().addActionListener(e -> updateTable());
-            gui.getUpdate().addActionListener(e -> updateTable());
+            gui.getComboBox().addActionListener(e -> swingWork());
+            gui.getUpdate().addActionListener(e -> swingWork());
         }
 
     }
 
     /**
+     * Creates a swingworker to update the JTable and post the result.
+     * This method should always be called from EDT
+     */
+    public void swingWork(){
+        String channel = gui.getSelectedChannel();
+
+        SwingWorker backgroundWork = new SwingWorker() {
+            @Override
+            protected Object doInBackground() {
+                return updateTable(channel);
+            }
+
+
+            @Override
+            protected void done() {
+                try {
+                    gui.addJtable((JTable) get());
+                } catch (ExecutionException | InterruptedException e) {
+                    gui.errorMessage();
+                }
+            }
+
+        };
+        backgroundWork.execute();
+    }
+
+    /**
      * Updates the table with the broadcasts of the currently selected channel
      */
-    public void updateTable() {
-
-        //borde inte kalla på gui.getSelectedChannel här utanför EDT, ge det som parameter till swingworker
+    synchronized private JTable updateTable(String channel) {
         try {
             broadcastsParser.getSchedule(channelParser.getChannelID
-                    (gui.getSelectedChannel()));
+                    (channel));
         } catch (IOException | NullPointerException e) {
             SwingUtilities.invokeLater(() -> {
                 gui.errorMessage();
@@ -75,13 +101,7 @@ public class SRController {
         }
 
         Object[][] data = getData();
-        JTable episodes = setUpJTable(data);
-
-        SwingUtilities.invokeLater(() -> {
-            gui.addJtable(episodes);
-        });
-
-
+        return setUpJTable(data);
     }
 
     /**
@@ -172,4 +192,5 @@ public class SRController {
                 .toString();
         return newTime.substring(0,10)+" "+newTime.substring(11,19);
     }
+
 }

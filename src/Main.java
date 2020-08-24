@@ -18,7 +18,7 @@ public class Main {
             @Override
             public void run() {
                 SwingUtilities.invokeLater(() -> {
-                    SRController.updateTable();
+                    SRController.swingWork();
                 });
             }
         };
