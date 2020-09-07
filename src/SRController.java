@@ -52,10 +52,11 @@ public class SRController {
 
             SwingUtilities.invokeLater(() -> {
                 swingWork();
+                gui.getComboBox().addActionListener(e -> swingWork());
+                gui.getUpdate().addActionListener(e -> swingWork());
             });
 
-            gui.getComboBox().addActionListener(e -> swingWork());
-            gui.getUpdate().addActionListener(e -> swingWork());
+
         }
 
     }
@@ -121,15 +122,16 @@ public class SRController {
             }
         };
 
-        SRTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        SRTable.getColumnModel().getColumn(0).setPreferredWidth(100);
-        SRTable.getColumnModel().getColumn(1).setPreferredWidth(200);
-        SRTable.getColumnModel().getColumn(2).setPreferredWidth(130);
-        SRTable.getColumnModel().getColumn(3).setPreferredWidth(60);
-        SRTable.getSelectionModel().addListSelectionListener(e -> {
-            if (gui.getTable().getSelectedRow() > -1) {
+        SwingUtilities.invokeLater(() -> {
+            SRTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            SRTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+            SRTable.getColumnModel().getColumn(1).setPreferredWidth(200);
+            SRTable.getColumnModel().getColumn(2).setPreferredWidth(130);
+            SRTable.getColumnModel().getColumn(3).setPreferredWidth(60);
+            SRTable.getSelectionModel().addListSelectionListener(e -> {
+                if (gui.getTable().getSelectedRow() > -1) {
                     if (broadcastsParser.getEpisodeSize() >
-                                SRTable.getSelectedRow()) {
+                            SRTable.getSelectedRow()) {
                         gui.setDescription(broadcastsParser.getTitles().get
                                 (SRTable.getSelectedRow()) + "\n" +
                                 broadcastsParser.getNodesContent("description")
@@ -146,7 +148,8 @@ public class SRController {
                         }
 
                     }
-            }
+                }
+            });
         });
         return SRTable;
     }
